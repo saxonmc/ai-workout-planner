@@ -174,5 +174,8 @@ if __name__ == '__main__':
     # Create templates directory if it doesn't exist
     os.makedirs('templates', exist_ok=True)
     
+    # Get port from environment variable (for Railway) or use default
+    port = int(os.environ.get('PORT', 5002))
+    
     # Run the app
-    app.run(debug=True, host='0.0.0.0', port=5002) 
+    app.run(debug=False, host='0.0.0.0', port=port) 

@@ -1,1 +1,1 @@
-web: gunicorn simple_ai_web_app:app 
+web: python3 simple_ai_web_app.py 
