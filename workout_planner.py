@@ -536,42 +536,88 @@ class WorkoutPlanner:
         print("\n" + "="*50)
         print(f"🏋️  WORKOUT PLAN - {workout['date']}")
         print("="*50)
-        print(f"Type: {workout['workout_type'].title()}")
-        print(f"Goal: {workout['goal'].replace('_', ' ').title()}")
-        print(f"Duration: {workout['estimated_duration']} minutes")
-        print(f"Level: {workout['experience_level'].title()}")
-        print(f"Equipment: {', '.join(workout['equipment_used'])}")
+        # Handle both regular and AI workout structures
+        workout_type = workout.get('workout_type', 'AI Generated')
+        goal = workout.get('goal', workout.get('user_preferences', {}).get('goal', 'bjj_performance'))
+        duration = workout.get('estimated_duration', workout.get('total_duration', 45))
+        level = workout.get('experience_level', workout.get('user_preferences', {}).get('experience_level', 'intermediate'))
+        equipment = workout.get('equipment_used', workout.get('user_preferences', {}).get('equipment', ['bodyweight']))
         
-        print("\n🔥 WARMUP")
-        print("-" * 20)
-        for exercise in workout['warmup']:
-            print(f"• {exercise['name']} - {exercise['duration']} min")
-            if exercise.get('notes'):
-                print(f"  Note: {exercise['notes']}")
+        print(f"Type: {workout_type.title()}")
+        print(f"Goal: {goal.replace('_', ' ').title()}")
+        print(f"Duration: {duration} minutes")
+        print(f"Level: {level.title()}")
+        print(f"Equipment: {', '.join(equipment)}")
         
-        print("\n💪 EXERCISES")
-        print("-" * 20)
-        for i, exercise in enumerate(workout['exercises'], 1):
-            print(f"{i}. {exercise['name']}")
-            if 'sets' in exercise:
-                print(f"   {exercise['sets']} sets × {exercise['reps']} reps")
-                print(f"   Rest: {exercise['rest_time']} seconds")
-            else:
-                print(f"   Duration: {exercise['duration']} minutes")
+        # Handle AI workout structure (strength, metcon, accessory sections)
+        if 'strength_exercises' in workout:
+            print("\n💪 STRENGTH")
+            print("-" * 20)
+            for i, exercise in enumerate(workout['strength_exercises'], 1):
+                print(f"{i}. {exercise['name']}")
+                if 'sets' in exercise:
+                    print(f"   {exercise['sets']} sets × {exercise['reps']} reps")
+                    print(f"   Rest: {exercise.get('rest_time', 90)} seconds")
+                if exercise.get('muscle_group'):
+                    print(f"   Target: {exercise['muscle_group'].title()}")
+                if exercise.get('notes'):
+                    print(f"   Note: {exercise['notes']}")
+                print()
             
-            if exercise.get('muscle_group'):
-                print(f"   Target: {exercise['muscle_group'].title()}")
+            print("\n🔥 METCON")
+            print("-" * 20)
+            for i, exercise in enumerate(workout['metcon_exercises'], 1):
+                print(f"{i}. {exercise['name']}")
+                print(f"   {exercise.get('workout_format', 'AMRAP')}: {exercise['reps']} reps")
+                if exercise.get('muscle_group'):
+                    print(f"   Target: {exercise['muscle_group'].title()}")
+                if exercise.get('notes'):
+                    print(f"   Note: {exercise['notes']}")
+                print()
             
-            if exercise.get('notes'):
-                print(f"   Note: {exercise['notes']}")
-            print()
-        
-        print("🧘 COOLDOWN")
-        print("-" * 20)
-        for exercise in workout['cooldown']:
-            print(f"• {exercise['name']} - {exercise['duration']} min")
-            if exercise.get('notes'):
-                print(f"  Note: {exercise['notes']}")
+            print("\n🥋 ACCESSORY")
+            print("-" * 20)
+            for i, exercise in enumerate(workout['accessory_exercises'], 1):
+                print(f"{i}. {exercise['name']}")
+                if 'sets' in exercise:
+                    print(f"   {exercise['sets']} sets × {exercise['reps']} reps")
+                if exercise.get('muscle_group'):
+                    print(f"   Target: {exercise['muscle_group'].title()}")
+                if exercise.get('notes'):
+                    print(f"   Note: {exercise['notes']}")
+                print()
+        else:
+            # Handle regular workout structure (warmup, exercises, cooldown)
+            print("\n🔥 WARMUP")
+            print("-" * 20)
+            for exercise in workout.get('warmup', []):
+                print(f"• {exercise['name']} - {exercise['duration']} min")
+                if exercise.get('notes'):
+                    print(f"  Note: {exercise['notes']}")
+            
+            print("\n💪 EXERCISES")
+            print("-" * 20)
+            for i, exercise in enumerate(workout.get('exercises', []), 1):
+                print(f"{i}. {exercise['name']}")
+                if 'sets' in exercise:
+                    print(f"   {exercise['sets']} sets × {exercise['reps']} reps")
+                    print(f"   Rest: {exercise['rest_time']} seconds")
+                else:
+                    print(f"   Duration: {exercise['duration']} minutes")
+                
+                if exercise.get('muscle_group'):
+                    print(f"   Target: {exercise['muscle_group'].title()}")
+                
+                if exercise.get('notes'):
+                    print(f"   Note: {exercise['notes']}")
+                print()
+            
+            print("\n🧘 COOLDOWN")
+            print("-" * 20)
+            for exercise in workout.get('cooldown', []):
+                print(f"• {exercise['name']} - {exercise['duration']} min")
+                if exercise.get('notes'):
+                    print(f"  Note: {exercise['notes']}")
         
         print("\n" + "="*50)
     
