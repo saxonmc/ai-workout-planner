@@ -301,7 +301,7 @@
                 </div>
                 <div class="info-item">
                     <div class="info-label">Goal</div>
-                    <div class="info-value">{{ workout.get('goal', 'bjj_performance').replace('_', ' ').title() }}</div>
+                    <div class="info-value">{{ workout.get('goal', workout.get('user_preferences', {}).get('goal', 'bjj_performance')).replace('_', ' ').title() }}</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">Duration</div>
@@ -327,7 +327,7 @@
                     </div>
                     <div class="info-item">
                         <div class="info-label">Goal</div>
-                        <div class="info-value">{{ workout.get('goal', 'bjj_performance').replace('_', ' ').title() }}</div>
+                        <div class="info-value">{{ workout.get('goal', workout.get('user_preferences', {}).get('goal', 'bjj_performance')).replace('_', ' ').title() }}</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Duration</div>

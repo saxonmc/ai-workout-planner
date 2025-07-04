@@ -35,22 +35,19 @@ class SimpleAIWorkoutPlanner:
             model_file (str): Path to save/load AI model
         """
         self.data = self._load_workout_data(data_file)
+        # Assign top-level keys for convenience (must be before model loading)
+        self.exercises = self.data.get('exercises', [])
+        self.workout_types = self.data.get('workout_types', {})
+        self.muscle_groups = self.data.get('muscle_groups', {})
         self.model_file = model_file
         self.user_preferences = {}
         self.user_history = []
         self.exercise_performance = {}
         self.progress_tracker = {}
-        
-        # Assign top-level keys for convenience
-        self.exercises = self.data.get('exercises', [])
-        self.workout_types = self.data.get('workout_types', {})
-        self.muscle_groups = self.data.get('muscle_groups', {})
-        
         # Simple AI Models (no scikit-learn dependency)
         self.exercise_weights = {}
         self.difficulty_adjustments = {}
         self.user_patterns = {}
-        
         # Load or initialize models
         self._load_or_initialize_models()
     
