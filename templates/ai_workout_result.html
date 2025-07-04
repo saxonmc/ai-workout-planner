@@ -378,7 +378,7 @@
             <div class="workout-stats">
                 <div class="stat-item">
                     <h4>Duration</h4>
-                    <p>{{ workout.time_available }} min</p>
+                    <p>{{ workout.get('time_available', workout.get('total_duration', 45)) }} min</p>
                 </div>
                 <div class="stat-item">
                     <h4>Goal</h4>
@@ -386,11 +386,11 @@
                 </div>
                 <div class="stat-item">
                     <h4>Level</h4>
-                    <p>{{ workout.experience_level.title() }}</p>
+                    <p>{{ workout.get('experience_level', workout.get('user_preferences', {}).get('experience_level', 'intermediate')).title() }}</p>
                 </div>
                 <div class="stat-item">
                     <h4>Equipment</h4>
-                    <p>{{ workout.equipment|length }} types</p>
+                    <p>{{ workout.get('equipment', workout.get('user_preferences', {}).get('equipment', [])|length) }} types</p>
                 </div>
             </div>
         </div>

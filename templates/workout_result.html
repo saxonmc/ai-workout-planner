@@ -309,7 +309,7 @@
                 </div>
                 <div class="info-item">
                     <div class="info-label">Level</div>
-                    <div class="info-value">{{ workout.experience_level.title() }}</div>
+                    <div class="info-value">{{ workout.get('experience_level', workout.get('user_preferences', {}).get('experience_level', 'intermediate')).title() }}</div>
                 </div>
             </div>
         </div>
@@ -333,10 +333,10 @@
                         <div class="info-label">Duration</div>
                         <div class="info-value">{{ workout.estimated_duration }} min</div>
                     </div>
-                    <div class="info-item">
-                        <div class="info-label">Level</div>
-                        <div class="info-value">{{ workout.experience_level.title() }}</div>
-                    </div>
+                                            <div class="info-item">
+                            <div class="info-label">Level</div>
+                            <div class="info-value">{{ workout.get('experience_level', workout.get('user_preferences', {}).get('experience_level', 'intermediate')).title() }}</div>
+                        </div>
                 </div>
             </div>
             
