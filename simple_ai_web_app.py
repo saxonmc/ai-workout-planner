@@ -21,17 +21,33 @@ app = Flask(__name__)
 app.secret_key = 'simple_ai_workout_planner_secret_key_2024'
 
 # Initialize AI planner
-planner = SimpleAIWorkoutPlanner()
+try:
+    planner = SimpleAIWorkoutPlanner()
+except Exception as e:
+    logger.error(f"Failed to initialize AI planner: {e}")
+    planner = None
 
 @app.route('/')
 def index():
     """Main page with workout generation form."""
     return render_template('ai_index.html')
 
+@app.route('/health')
+def health_check():
+    """Health check endpoint for deployment monitoring."""
+    return jsonify({
+        'status': 'healthy',
+        'message': 'AI Workout Planner is running',
+        'timestamp': datetime.now().isoformat()
+    })
+
 @app.route('/generate_workout', methods=['POST'])
 def generate_workout():
     """Generate AI-powered workout."""
     try:
+        if planner is None:
+            return render_template('ai_error.html', error="AI planner is not initialized. Please try again.")
+        
         # Get form data
         preferences = {
             'time_available': int(request.form.get('time_available', 45)),
