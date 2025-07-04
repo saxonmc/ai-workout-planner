@@ -1,0 +1,105 @@
+{
+  "id": "ai_workout_20250703_172154",
+  "timestamp": "2025-07-03T17:21:54.293281",
+  "user_preferences": {
+    "time_available": 45,
+    "goal": "bjj_performance",
+    "equipment": [
+      "bodyweight",
+      "barbell",
+      "dumbbells",
+      "kettlebell",
+      "pull-up bar",
+      "assault_bike"
+    ],
+    "experience_level": "intermediate",
+    "focus_areas": []
+  },
+  "strength_exercises": [
+    {
+      "name": "Strict Pull-ups",
+      "muscle_group": "back",
+      "sets": 4,
+      "reps": 10,
+      "rest_time": 90,
+      "equipment": [
+        "pull-up bar"
+      ],
+      "difficulty": "intermediate",
+      "predicted_difficulty": 6.0,
+      "ai_recommended": true,
+      "notes": "AI-recommended: 4x10"
+    },
+    {
+      "name": "Barbell Back Squat",
+      "muscle_group": "legs",
+      "sets": 4,
+      "reps": 10,
+      "rest_time": 90,
+      "equipment": [
+        "barbell",
+        "rack"
+      ],
+      "difficulty": "intermediate",
+      "predicted_difficulty": 6.0,
+      "ai_recommended": true,
+      "notes": "AI-recommended: 4x10"
+    }
+  ],
+  "metcon_exercises": [
+    {
+      "name": "Burpees",
+      "muscle_group": "full_body",
+      "reps": 10,
+      "equipment": [
+        "bodyweight"
+      ],
+      "difficulty": "beginner",
+      "bjj_focus": "cardio",
+      "workout_format": "EMOM",
+      "predicted_difficulty": 3.0,
+      "ai_recommended": true,
+      "notes": "AI-recommended EMOM: 10 reps per round"
+    },
+    {
+      "name": "Thrusters",
+      "muscle_group": "full_body",
+      "reps": 8,
+      "equipment": [
+        "dumbbells",
+        "barbell"
+      ],
+      "difficulty": "intermediate",
+      "bjj_focus": "endurance",
+      "workout_format": "EMOM",
+      "predicted_difficulty": 6.0,
+      "ai_recommended": true,
+      "notes": "AI-recommended EMOM: 8 reps per round"
+    },
+    {
+      "name": "Kettlebell Swings",
+      "muscle_group": "posterior_chain",
+      "reps": 10,
+      "equipment": [
+        "kettlebell"
+      ],
+      "difficulty": "beginner",
+      "bjj_focus": "hip_power",
+      "workout_format": "EMOM",
+      "predicted_difficulty": 3.0,
+      "ai_recommended": true,
+      "notes": "AI-recommended EMOM: 10 reps per round"
+    }
+  ],
+  "accessory_exercises": [],
+  "total_duration": 45,
+  "ai_generated": true,
+  "progress_prediction": {
+    "predicted_progress": 5.0,
+    "confidence": 0.3,
+    "recommendations": [
+      "Complete more workouts to get personalized insights",
+      "Focus on consistency"
+    ]
+  }
+}

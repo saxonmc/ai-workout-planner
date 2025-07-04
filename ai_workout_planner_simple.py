@@ -138,8 +138,12 @@ class SimpleAIWorkoutPlanner:
     def _initialize_models(self):
         """Initialize new AI models."""
         # Initialize exercise weights (preference scores)
-        for exercise in self.exercises:
-            self.exercise_weights[exercise['name']] = 1.0
+        if hasattr(self, 'exercises') and self.exercises:
+            for exercise in self.exercises:
+                self.exercise_weights[exercise['name']] = 1.0
+        else:
+            # Fallback if exercises not loaded yet
+            logger.warning("Exercises not loaded, initializing empty weights")
         
         # Initialize difficulty adjustments
         self.difficulty_adjustments = {
@@ -400,8 +404,12 @@ class SimpleAIWorkoutPlanner:
         }
         
         # Predict progress for this workout
-        progress_prediction = self.predict_progress(workout)
-        workout['progress_prediction'] = progress_prediction
+        try:
+            progress_prediction = self.predict_progress(workout)
+            workout['progress_prediction'] = progress_prediction
+        except Exception as e:
+            logger.warning(f"Could not predict progress: {e}")
+            workout['progress_prediction'] = self._default_progress_prediction()
         
         return workout
     

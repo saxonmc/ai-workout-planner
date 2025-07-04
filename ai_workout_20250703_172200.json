@@ -1,0 +1,56 @@
+{
+  "id": "ai_workout_20250703_172200",
+  "timestamp": "2025-07-03T17:22:00.082532",
+  "user_preferences": {
+    "time_available": 45,
+    "goal": "bjj_performance",
+    "equipment": [
+      "bodyweight"
+    ],
+    "experience_level": "intermediate",
+    "focus_areas": []
+  },
+  "strength_exercises": [
+    {
+      "name": "L-sit",
+      "muscle_group": "core",
+      "sets": 4,
+      "reps": 10,
+      "rest_time": 90,
+      "equipment": [
+        "bodyweight"
+      ],
+      "difficulty": "intermediate",
+      "predicted_difficulty": 6.0,
+      "ai_recommended": true,
+      "notes": "AI-recommended: 4x10"
+    }
+  ],
+  "metcon_exercises": [
+    {
+      "name": "Burpees",
+      "muscle_group": "full_body",
+      "reps": 10,
+      "equipment": [
+        "bodyweight"
+      ],
+      "difficulty": "beginner",
+      "bjj_focus": "cardio",
+      "workout_format": "AMRAP",
+      "predicted_difficulty": 3.0,
+      "ai_recommended": true,
+      "notes": "AI-recommended AMRAP: 10 reps per round"
+    }
+  ],
+  "accessory_exercises": [],
+  "total_duration": 45,
+  "ai_generated": true,
+  "progress_prediction": {
+    "predicted_progress": 5.0,
+    "confidence": 0.3,
+    "recommendations": [
+      "Complete more workouts to get personalized insights",
+      "Focus on consistency"
+    ]
+  }
+}
