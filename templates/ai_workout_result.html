@@ -382,7 +382,7 @@
                 </div>
                 <div class="stat-item">
                     <h4>Goal</h4>
-                    <p>{{ workout.goal.replace('_', ' ').title() }}</p>
+                    <p>{{ workout.get('user_preferences', {}).get('goal', 'bjj_performance').replace('_', ' ').title() }}</p>
                 </div>
                 <div class="stat-item">
                     <h4>Level</h4>
