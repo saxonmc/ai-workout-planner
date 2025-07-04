@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Workout Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px 20px;
+        }
+        
+        .day-section {
+            margin-bottom: 30px;
+            border: 2px solid #e1e5e9;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .day-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 2px solid #e1e5e9;
+        }
+        
+        .day-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .day-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .info-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 12px;
+        }
+        
+        .info-label {
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+        
+        .info-value {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .exercises {
+            padding: 20px;
+        }
+        
+        .exercise-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .exercise-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .exercise-details {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .nav-links a {
+            flex: 1;
+            padding: 12px;
+            background: #f8f9fa;
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background: #e9ecef;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 Your Weekly Plan</h1>
+            <p>Complete workout schedule for the week</p>
+        </div>
+        
+        <div class="content">
+            <div class="success-message">
+                ✅ Weekly plan generated and saved as {{ filename }}
+            </div>
+            
+            {% for day, workout in weekly_workouts.items() %}
+            <div class="day-section">
+                <div class="day-header">
+                    <div class="day-title">
+                        {% if day == 'Monday' %}📅{% elif day == 'Tuesday' %}📅{% elif day == 'Wednesday' %}📅{% elif day == 'Thursday' %}📅{% elif day == 'Friday' %}📅{% elif day == 'Saturday' %}📅{% else %}📅{% endif %}
+                        {{ day }}
+                    </div>
+                    <div class="day-info">
+                        <div class="info-item">
+                            <div class="info-label">Type</div>
+                            <div class="info-value">{{ workout.workout_type.replace('_', ' ').title() }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Duration</div>
+                            <div class="info-value">{{ workout.estimated_duration }} min</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="exercises">
+                    {% for exercise in workout.exercises[:3] %}
+                    <div class="exercise-item">
+                        <div class="exercise-name">{{ exercise.name }}</div>
+                        <div class="exercise-details">
+                            {% if exercise.sets %}
+                                {{ exercise.sets }} sets × {{ exercise.reps }} reps
+                            {% else %}
+                                {{ exercise.duration }} minutes
+                            {% endif %}
+                            • {{ exercise.muscle_group.title() }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    {% if workout.exercises|length > 3 %}
+                    <div class="exercise-item" style="background: #e3f2fd; color: #1976d2; text-align: center;">
+                        + {{ workout.exercises|length - 3 }} more exercises
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            
+            <a href="/" class="btn">🔄 Generate New Plan</a>
+            <a href="/saved_workouts" class="btn btn-secondary">💾 View Saved Workouts</a>
+            
+            <div class="nav-links">
+                <a href="/weekly_plan">📅 New Weekly Plan</a>
+                <a href="/">🏠 Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

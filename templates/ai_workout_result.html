@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Workout - Gym Ready</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .ai-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .workout-timer {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .timer-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .timer-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .timer-btn.start {
+            background: #27ae60;
+            color: white;
+        }
+
+        .timer-btn.stop {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .timer-btn.reset {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .workout-info {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .workout-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-item h4 {
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .workout-section {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+            margin-right: 12px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .exercise-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .exercise-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .exercise-item:hover, .exercise-item:active {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .exercise-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .exercise-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 8px 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #667eea;
+            display: block;
+            font-size: 0.8rem;
+        }
+
+        .ai-prediction {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .exercise-notes {
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+            font-style: italic;
+            color: #666;
+            border-left: 3px solid #667eea;
+            font-size: 0.9rem;
+        }
+
+        .exercise-tracker {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .track-btn {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .track-btn:hover, .track-btn:active {
+            background: #667eea;
+            color: white;
+        }
+
+        .track-btn.completed {
+            background: #27ae60;
+            border-color: #27ae60;
+            color: white;
+        }
+
+        .progress-prediction {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .progress-prediction h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .progress-item {
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .progress-item h4 {
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .progress-item p {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .action-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .action-btn.secondary {
+            background: #f8f9fa;
+            color: #2c3e50;
+            border: 2px solid #e0e0e0;
+        }
+
+        .action-btn:hover, .action-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .workout-section {
+                padding: 15px;
+            }
+            
+            .workout-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .exercise-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .progress-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI Workout Generated</h1>
+            <p>BJJ Performance Training</p>
+            <div class="ai-badge">🤖 AI-Powered</div>
+        </div>
+
+        <div class="workout-timer">
+            <div class="timer-display" id="timer">00:00</div>
+            <div class="timer-controls">
+                <button class="timer-btn start" onclick="startTimer()">Start</button>
+                <button class="timer-btn stop" onclick="stopTimer()">Stop</button>
+                <button class="timer-btn reset" onclick="resetTimer()">Reset</button>
+            </div>
+        </div>
+
+        <div class="workout-info">
+            <h3>Workout Summary</h3>
+            <div class="workout-stats">
+                <div class="stat-item">
+                    <h4>Duration</h4>
+                    <p>{{ workout.time_available }} min</p>
+                </div>
+                <div class="stat-item">
+                    <h4>Goal</h4>
+                    <p>{{ workout.goal.replace('_', ' ').title() }}</p>
+                </div>
+                <div class="stat-item">
+                    <h4>Level</h4>
+                    <p>{{ workout.experience_level.title() }}</p>
+                </div>
+                <div class="stat-item">
+                    <h4>Equipment</h4>
+                    <p>{{ workout.equipment|length }} types</p>
+                </div>
+            </div>
+        </div>
+
+        {% for section_name, exercises in workout.sections.items() %}
+        <div class="workout-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    {% if section_name == 'strength' %}💪
+                    {% elif section_name == 'metcon' %}🔥
+                    {% elif section_name == 'accessory' %}🎯
+                    {% else %}⚡{% endif %}
+                </div>
+                <div class="section-title">{{ section_name.title() }}</div>
+            </div>
+
+            <div class="exercise-list">
+                {% for exercise in exercises %}
+                <div class="exercise-item">
+                    <div class="exercise-header">
+                        <div class="exercise-name">{{ exercise.name }}</div>
+                        <div class="ai-prediction">AI: {{ exercise.predicted_difficulty }}/10</div>
+                    </div>
+
+                    <div class="exercise-details">
+                        {% if exercise.sets %}
+                        <div class="detail-item">
+                            <span class="detail-label">Sets</span>
+                            <span>{{ exercise.sets }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if exercise.reps %}
+                        <div class="detail-item">
+                            <span class="detail-label">Reps</span>
+                            <span>{{ exercise.reps }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if exercise.rest_time %}
+                        <div class="detail-item">
+                            <span class="detail-label">Rest</span>
+                            <span>{{ exercise.rest_time }}s</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if exercise.time %}
+                        <div class="detail-item">
+                            <span class="detail-label">Time</span>
+                            <span>{{ exercise.time }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if exercise.notes %}
+                    <div class="exercise-notes">{{ exercise.notes }}</div>
+                    {% endif %}
+
+                    <div class="exercise-tracker">
+                        <button class="track-btn" onclick="markCompleted(this)">✓ Complete</button>
+                        <button class="track-btn" onclick="markSkipped(this)">⏭ Skip</button>
+                        <button class="track-btn" onclick="markFailed(this)">❌ Failed</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if workout.progress_prediction %}
+        <div class="progress-prediction">
+            <h3>🤖 AI Progress Prediction</h3>
+            <div class="progress-stats">
+                <div class="progress-item">
+                    <h4>Difficulty Score</h4>
+                    <p>{{ workout.progress_prediction.difficulty_score }}/10</p>
+                </div>
+                <div class="progress-item">
+                    <h4>Expected Progress</h4>
+                    <p>{{ workout.progress_prediction.progress_score }}%</p>
+                </div>
+                <div class="progress-item">
+                    <h4>Next Workout</h4>
+                    <p>{{ workout.progress_prediction.next_workout_difficulty }}</p>
+                </div>
+                <div class="progress-item">
+                    <h4>Recommendations</h4>
+                    <p>{{ workout.progress_prediction.recommendations|length }}</p>
+                </div>
+            </div>
+            
+            {% if workout.progress_prediction.recommendations %}
+            <div style="text-align: left; margin-top: 15px;">
+                <h4>AI Recommendations:</h4>
+                <ul style="margin-left: 20px; margin-top: 8px;">
+                    {% for rec in workout.progress_prediction.recommendations %}
+                    <li style="margin-bottom: 5px;">{{ rec }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="action-buttons">
+            <button class="action-btn primary" onclick="provideFeedback()">📝 Provide Feedback</button>
+            <button class="action-btn secondary" onclick="window.location.href='/'">🔄 New Workout</button>
+        </div>
+    </div>
+
+    <script>
+        // Timer functionality
+        let timerInterval;
+        let seconds = 0;
+        let isRunning = false;
+
+        function updateTimer() {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    updateTimer();
+                }, 1000);
+            }
+        }
+
+        function stopTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            stopTimer();
+            seconds = 0;
+            updateTimer();
+        }
+
+        // Exercise tracking
+        function markCompleted(btn) {
+            const tracker = btn.parentElement;
+            tracker.querySelectorAll('.track-btn').forEach(b => b.classList.remove('completed'));
+            btn.classList.add('completed');
+            btn.textContent = '✓ Completed';
+        }
+
+        function markSkipped(btn) {
+            const tracker = btn.parentElement;
+            tracker.querySelectorAll('.track-btn').forEach(b => b.classList.remove('completed'));
+            btn.classList.add('completed');
+            btn.textContent = '⏭ Skipped';
+        }
+
+        function markFailed(btn) {
+            const tracker = btn.parentElement;
+            tracker.querySelectorAll('.track-btn').forEach(b => b.classList.remove('completed'));
+            btn.classList.add('completed');
+            btn.textContent = '❌ Failed';
+        }
+
+        function provideFeedback() {
+            // Store workout completion data
+            const completedExercises = [];
+            document.querySelectorAll('.exercise-item').forEach(item => {
+                const name = item.querySelector('.exercise-name').textContent;
+                const completedBtn = item.querySelector('.track-btn.completed');
+                let status = 'not_completed';
+                
+                if (completedBtn) {
+                    if (completedBtn.textContent.includes('Completed')) status = 'completed';
+                    else if (completedBtn.textContent.includes('Skipped')) status = 'skipped';
+                    else if (completedBtn.textContent.includes('Failed')) status = 'failed';
+                }
+                
+                completedExercises.push({ name, status });
+            });
+
+            // Redirect to feedback page with data
+            const workoutData = {
+                workout_id: '{{ workout.id }}',
+                duration: seconds,
+                exercises: completedExercises,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('workoutFeedback', JSON.stringify(workoutData));
+            window.location.href = '/feedback';
+        }
+
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate exercise items on load
+            const exerciseItems = document.querySelectorAll('.exercise-item');
+            exerciseItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    item.style.transition = 'all 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html> 

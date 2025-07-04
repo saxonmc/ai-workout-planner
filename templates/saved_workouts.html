@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Workouts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px 20px;
+        }
+        
+        .workout-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s;
+        }
+        
+        .workout-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .workout-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .workout-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .workout-date {
+            font-size: 12px;
+            color: #666;
+            background: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .workout-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .info-item {
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+        
+        .info-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .workout-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: background 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .nav-links a {
+            flex: 1;
+            padding: 12px;
+            background: #f8f9fa;
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💾 Saved Workouts</h1>
+            <p>Your workout history</p>
+        </div>
+        
+        <div class="content">
+            {% if saved_workouts %}
+                {% for workout in saved_workouts %}
+                <div class="workout-card">
+                    <div class="workout-header">
+                        <div class="workout-title">{{ workout.name }}</div>
+                        <div class="workout-date">{{ workout.date }}</div>
+                    </div>
+                    
+                    <div class="workout-info">
+                        <div class="info-item">
+                            <div class="info-label">Type</div>
+                            <div class="info-value">{{ workout.workout_type.replace('_', ' ').title() }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Duration</div>
+                            <div class="info-value">{{ workout.estimated_duration }} min</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Exercises</div>
+                            <div class="info-value">{{ workout.exercises|length }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-actions">
+                        <a href="/view_workout/{{ workout.id }}" class="btn btn-primary">👁️ View</a>
+                        <a href="/download_workout/{{ workout.id }}" class="btn btn-secondary">📥 Download</a>
+                        <a href="/delete_workout/{{ workout.id }}" class="btn btn-danger" onclick="return confirm('Delete this workout?')">🗑️ Delete</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <h3>No saved workouts yet</h3>
+                    <p>Generate your first workout to see it here!</p>
+                </div>
+            {% endif %}
+            
+            <div class="nav-links">
+                <a href="/">🏠 Home</a>
+                <a href="/weekly_plan">📅 Weekly Plan</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

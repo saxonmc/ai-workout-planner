@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Workout Planner - Gym Ready</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .ai-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .quick-presets {
+            background: #f8f9fa;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .preset-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .preset-btn {
+            padding: 12px 8px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .preset-btn:hover, .preset-btn:active {
+            border-color: #667eea;
+            background-color: #667eea;
+            color: white;
+        }
+
+        .form-container {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .checkbox-item:hover, .checkbox-item:active {
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.3);
+        }
+
+        .checkbox-item input[type="checkbox"]:checked + span {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .radio-item {
+            text-align: center;
+        }
+
+        .radio-item input[type="radio"] {
+            display: none;
+        }
+
+        .radio-item label {
+            display: block;
+            padding: 12px 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .radio-item input[type="radio"]:checked + label {
+            border-color: #667eea;
+            background-color: #667eea;
+            color: white;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover, .btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .timer-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .timer-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .timer-btn.start {
+            background: #27ae60;
+            color: white;
+        }
+
+        .timer-btn.stop {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .timer-btn.reset {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .nav-links {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .nav-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .nav-link:hover, .nav-link:active {
+            background: #667eea;
+            color: white;
+        }
+
+        .features {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .features h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .feature-item {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .feature-item h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .feature-item p {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .form-container {
+                padding: 15px;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .radio-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI Workout Planner</h1>
+            <p>Gym-Ready BJJ Training</p>
+            <div class="ai-badge">🤖 AI-Powered</div>
+        </div>
+
+        <div class="quick-presets">
+            <div class="preset-title">Quick Presets</div>
+            <div class="preset-buttons">
+                <button class="preset-btn" onclick="setPreset('quick')">⚡ Quick 30min</button>
+                <button class="preset-btn" onclick="setPreset('strength')">💪 Strength Focus</button>
+                <button class="preset-btn" onclick="setPreset('conditioning')">🔥 Conditioning</button>
+                <button class="preset-btn" onclick="setPreset('bjj')">🥋 BJJ Performance</button>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <div class="timer-section">
+                <div class="timer-display" id="timer">00:00</div>
+                <div class="timer-controls">
+                    <button class="timer-btn start" onclick="startTimer()">Start</button>
+                    <button class="timer-btn stop" onclick="stopTimer()">Stop</button>
+                    <button class="timer-btn reset" onclick="resetTimer()">Reset</button>
+                </div>
+            </div>
+
+            <form action="/generate_workout" method="POST">
+                <div class="form-group">
+                    <label for="time_available">Available Time (minutes)</label>
+                    <select name="time_available" id="time_available" class="form-control" required>
+                        <option value="30">30 minutes</option>
+                        <option value="45" selected>45 minutes</option>
+                        <option value="60">60 minutes</option>
+                        <option value="75">75 minutes</option>
+                        <option value="90">90 minutes</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Training Goal</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" name="goal" value="bjj_performance" id="bjj_performance" checked>
+                            <label for="bjj_performance">BJJ Performance</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="goal" value="strength" id="strength">
+                            <label for="strength">Strength</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="goal" value="conditioning" id="conditioning">
+                            <label for="conditioning">Conditioning</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Available Equipment</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="bodyweight" id="bodyweight" checked>
+                            <span for="bodyweight">Bodyweight</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="barbell" id="barbell">
+                            <span for="barbell">Barbell</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="dumbbells" id="dumbbells">
+                            <span for="dumbbells">Dumbbells</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="kettlebell" id="kettlebell">
+                            <span for="kettlebell">Kettlebell</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="pull-up bar" id="pull-up bar">
+                            <span for="pull-up bar">Pull-up Bar</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="assault_bike" id="assault_bike">
+                            <span for="assault_bike">Assault Bike</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="medicine_ball" id="medicine_ball">
+                            <span for="medicine_ball">Medicine Ball</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="rings" id="rings">
+                            <span for="rings">Rings</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Experience Level</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" name="experience_level" value="beginner" id="beginner">
+                            <label for="beginner">Beginner</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="experience_level" value="intermediate" id="intermediate" checked>
+                            <label for="intermediate">Intermediate</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="experience_level" value="advanced" id="advanced">
+                            <label for="advanced">Advanced</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Focus Areas (Optional)</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="focus_areas" value="hip_power" id="hip_power">
+                            <span for="hip_power">Hip Power</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="focus_areas" value="grip_strength" id="grip_strength">
+                            <span for="grip_strength">Grip Strength</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="focus_areas" value="explosive_power" id="explosive_power">
+                            <span for="explosive_power">Explosive Power</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="focus_areas" value="core_strength" id="core_strength">
+                            <span for="core_strength">Core Strength</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="focus_areas" value="endurance" id="endurance">
+                            <span for="endurance">Endurance</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="focus_areas" value="stabilization" id="stabilization">
+                            <span for="stabilization">Stabilization</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">
+                    🤖 Generate AI Workout
+                </button>
+            </form>
+
+            <div class="nav-links">
+                <a href="/insights" class="nav-link">📊 AI Insights</a>
+                <a href="/history" class="nav-link">📈 History</a>
+            </div>
+        </div>
+
+        <div class="features">
+            <h3>Gym-Ready Features</h3>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <h4>⏱️ Workout Timer</h4>
+                    <p>Track your workout time</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🎯 Quick Presets</h4>
+                    <p>One-tap workout types</p>
+                </div>
+                <div class="feature-item">
+                    <h4>📱 Mobile Optimized</h4>
+                    <p>Easy touch controls</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🤖 AI Learning</h4>
+                    <p>Gets smarter over time</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Timer functionality
+        let timerInterval;
+        let seconds = 0;
+        let isRunning = false;
+
+        function updateTimer() {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    updateTimer();
+                }, 1000);
+            }
+        }
+
+        function stopTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            stopTimer();
+            seconds = 0;
+            updateTimer();
+        }
+
+        // Preset functionality
+        function setPreset(type) {
+            const timeSelect = document.getElementById('time_available');
+            const goalRadios = document.querySelectorAll('input[name="goal"]');
+            const equipmentCheckboxes = document.querySelectorAll('input[name="equipment"]');
+            const experienceRadios = document.querySelectorAll('input[name="experience_level"]');
+
+            switch(type) {
+                case 'quick':
+                    timeSelect.value = '30';
+                    goalRadios[0].checked = true; // BJJ Performance
+                    equipmentCheckboxes[0].checked = true; // Bodyweight only
+                    experienceRadios[1].checked = true; // Intermediate
+                    break;
+                case 'strength':
+                    timeSelect.value = '60';
+                    goalRadios[1].checked = true; // Strength
+                    equipmentCheckboxes[0].checked = true; // Bodyweight
+                    equipmentCheckboxes[1].checked = true; // Barbell
+                    equipmentCheckboxes[2].checked = true; // Dumbbells
+                    experienceRadios[2].checked = true; // Advanced
+                    break;
+                case 'conditioning':
+                    timeSelect.value = '45';
+                    goalRadios[2].checked = true; // Conditioning
+                    equipmentCheckboxes[0].checked = true; // Bodyweight
+                    equipmentCheckboxes[5].checked = true; // Assault Bike
+                    experienceRadios[1].checked = true; // Intermediate
+                    break;
+                case 'bjj':
+                    timeSelect.value = '45';
+                    goalRadios[0].checked = true; // BJJ Performance
+                    equipmentCheckboxes[0].checked = true; // Bodyweight
+                    equipmentCheckboxes[1].checked = true; // Barbell
+                    equipmentCheckboxes[3].checked = true; // Kettlebell
+                    equipmentCheckboxes[4].checked = true; // Pull-up bar
+                    experienceRadios[2].checked = true; // Advanced
+                    break;
+            }
+        }
+
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate form elements on load
+            const formElements = document.querySelectorAll('.form-group');
+            formElements.forEach((element, index) => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    element.style.transition = 'all 0.5s ease';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+
+            // Add loading state to submit button
+            const form = document.querySelector('form');
+            const submitBtn = document.querySelector('.btn');
+            
+            form.addEventListener('submit', function() {
+                submitBtn.textContent = '🤖 Generating...';
+                submitBtn.disabled = true;
+            });
+
+            // Prevent zoom on input focus (iOS)
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.style.fontSize = '16px';
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

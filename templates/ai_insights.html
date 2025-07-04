@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Insights - BJJ Performance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .ai-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .insights-section {
+            padding: 30px;
+        }
+
+        .insight-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .insight-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .insight-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .insight-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .trend-indicator {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .trend-improving {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .trend-stable {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .trend-declining {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .recommendations {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .recommendations h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .recommendation-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendation-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+        }
+
+        .recommendation-item:last-child {
+            border-bottom: none;
+        }
+
+        .recommendation-icon {
+            font-size: 1.2rem;
+            margin-right: 10px;
+            color: #667eea;
+        }
+
+        .progress-chart {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .chart-bar {
+            background: #e0e0e0;
+            height: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .chart-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .chart-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .no-data h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background: white;
+        }
+
+        .nav-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .insights-section {
+                padding: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .insight-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI Training Insights</h1>
+            <div class="ai-badge">🤖 AI-Powered Analysis</div>
+        </div>
+
+        <div class="insights-section">
+            {% if insights.message %}
+            <div class="no-data">
+                <h3>📊 {{ insights.message }}</h3>
+                <p>{{ insights.recommendations[0] }}</p>
+            </div>
+            {% else %}
+            
+            <div class="insight-card">
+                <div class="insight-header">
+                    <div class="insight-icon">📈</div>
+                    <div class="insight-title">Training Overview</div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">{{ insights.total_workouts }}</div>
+                        <div class="stat-label">Total Workouts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ "%.1f"|format(insights.average_difficulty) }}</div>
+                        <div class="stat-label">Avg Difficulty</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ "%.1f"|format(insights.average_enjoyment) }}</div>
+                        <div class="stat-label">Avg Enjoyment</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ "%.0f"|format(insights.average_completion_rate * 100) }}%</div>
+                        <div class="stat-label">Completion Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            {% if insights.trends %}
+            <div class="insight-card">
+                <div class="insight-header">
+                    <div class="insight-icon">📊</div>
+                    <div class="insight-title">Progress Trends</div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">
+                            {{ insights.trends.difficulty_trend.title() }}
+                            <span class="trend-indicator 
+                                {% if insights.trends.difficulty_trend == 'improving' %}trend-improving
+                                {% elif insights.trends.difficulty_trend == 'stable' %}trend-stable
+                                {% else %}trend-declining{% endif %}">
+                                {% if insights.trends.difficulty_trend == 'improving' %}↗️
+                                {% elif insights.trends.difficulty_trend == 'stable' %}→
+                                {% else %}↘️{% endif %}
+                            </span>
+                        </div>
+                        <div class="stat-label">Difficulty Trend</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ "%.1f"|format(insights.trends.progress_rate) }}</div>
+                        <div class="stat-label">Progress Rate</div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="insight-card">
+                <div class="insight-header">
+                    <div class="insight-icon">🎯</div>
+                    <div class="insight-title">AI Recommendations</div>
+                </div>
+                
+                <div class="recommendations">
+                    <h4>Personalized Training Suggestions:</h4>
+                    <ul class="recommendation-list">
+                        {% for rec in insights.recommendations %}
+                        <li class="recommendation-item">
+                            <div class="recommendation-icon">💡</div>
+                            <div>{{ rec }}</div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-header">
+                    <div class="insight-icon">📊</div>
+                    <div class="insight-title">Performance Metrics</div>
+                </div>
+                
+                <div class="progress-chart">
+                    <h4>Training Consistency</h4>
+                    <div class="chart-label">
+                        <span>Completion Rate</span>
+                        <span>{{ "%.0f"|format(insights.average_completion_rate * 100) }}%</span>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-fill" style="width: {{ insights.average_completion_rate * 100 }}%"></div>
+                    </div>
+                    
+                    <h4 style="margin-top: 20px;">Difficulty vs Enjoyment</h4>
+                    <div class="chart-label">
+                        <span>Difficulty</span>
+                        <span>{{ "%.1f"|format(insights.average_difficulty) }}/10</span>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-fill" style="width: {{ insights.average_difficulty * 10 }}%"></div>
+                    </div>
+                    
+                    <div class="chart-label">
+                        <span>Enjoyment</span>
+                        <span>{{ "%.1f"|format(insights.average_enjoyment) }}/10</span>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-fill" style="width: {{ insights.average_enjoyment * 10 }}%"></div>
+                    </div>
+                </div>
+            </div>
+
+            {% endif %}
+        </div>
+
+        <div class="nav-links">
+            <a href="/" class="nav-link">🏠 Generate Workout</a>
+            <a href="/history" class="nav-link">📈 Workout History</a>
+        </div>
+    </div>
+
+    <script>
+        // Animate chart fills
+        document.addEventListener('DOMContentLoaded', function() {
+            const chartFills = document.querySelectorAll('.chart-fill');
+            chartFills.forEach((fill, index) => {
+                const width = fill.style.width;
+                fill.style.width = '0%';
+                setTimeout(() => {
+                    fill.style.width = width;
+                }, index * 200);
+            });
+            
+            // Animate insight cards
+            const cards = document.querySelectorAll('.insight-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html> 

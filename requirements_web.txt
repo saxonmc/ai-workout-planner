@@ -1,0 +1,6 @@
+# Web App Dependencies
+Flask==2.3.3
+Werkzeug==2.3.7
+
+# Core dependencies (already included in main requirements)
+# No additional dependencies needed - all other modules are built-in 

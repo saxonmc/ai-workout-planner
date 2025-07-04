@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Submitted - AI Workout Planner</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .success-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        .success-title {
+            color: #27ae60;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .success-message {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .feedback-summary {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .feedback-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .feedback-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .feedback-value {
+            color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: transform 0.3s ease;
+            margin: 0 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">🎉</div>
+        <h1 class="success-title">Feedback Submitted!</h1>
+        <p class="success-message">
+            Thank you for your feedback! The AI has learned from your workout experience and will use this information to create better workouts in the future.
+        </p>
+        
+        <div class="feedback-summary">
+            <h3>Your Feedback Summary:</h3>
+            <div class="feedback-item">
+                <span class="feedback-label">Difficulty Rating:</span>
+                <span class="feedback-value">{{ feedback.difficulty_rating }}/10</span>
+            </div>
+            <div class="feedback-item">
+                <span class="feedback-label">Enjoyment Rating:</span>
+                <span class="feedback-value">{{ feedback.enjoyment_rating }}/10</span>
+            </div>
+            <div class="feedback-item">
+                <span class="feedback-label">Completion Rate:</span>
+                <span class="feedback-value">{{ "%.0f"|format(feedback.completion_rate * 100) }}%</span>
+            </div>
+            {% if feedback.performance_notes %}
+            <div class="feedback-item">
+                <span class="feedback-label">Notes:</span>
+                <span class="feedback-value">{{ feedback.performance_notes }}</span>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div>
+            <a href="/" class="btn">🏠 Generate New Workout</a>
+            <a href="/insights" class="btn btn-secondary">📊 View AI Insights</a>
+        </div>
+    </div>
+</body>
+</html> 

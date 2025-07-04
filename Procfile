@@ -1,0 +1,1 @@
+web: gunicorn simple_ai_web_app:app 

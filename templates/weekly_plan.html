@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Workout Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .form-container {
+            padding: 30px 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        input[type="number"], select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            background: #f8f9fa;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .checkbox-item:hover {
+            border-color: #667eea;
+            background: white;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+        
+        .checkbox-item label {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .nav-links a {
+            flex: 1;
+            padding: 12px;
+            background: #f8f9fa;
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 Weekly Workout Plan</h1>
+            <p>Generate a complete week of workouts</p>
+        </div>
+        
+        <div class="form-container">
+            <form action="/generate_weekly" method="POST">
+                <div class="form-group">
+                    <label for="time_per_day">⏰ Time per day (minutes)</label>
+                    <input type="number" name="time_per_day" id="time_per_day" value="30" min="15" max="120" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="goal">🎯 What's your goal?</label>
+                    <select name="goal" id="goal" required>
+                        <option value="general_fitness">General Fitness</option>
+                        <option value="strength">Build Strength</option>
+                        <option value="muscle_gain">Build Muscle</option>
+                        <option value="weight_loss">Lose Weight</option>
+                        <option value="cardio">Improve Cardio</option>
+                        <option value="endurance">Build Endurance</option>
+                        <option value="toning">Tone Muscles</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="experience_level">📊 Experience Level</label>
+                    <select name="experience_level" id="experience_level" required>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>🏋️ What equipment do you have?</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="bodyweight" id="bodyweight" checked>
+                            <label for="bodyweight">Bodyweight</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="dumbbells" id="dumbbells">
+                            <label for="dumbbells">Dumbbells</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="barbell" id="barbell">
+                            <label for="barbell">Barbell</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="bench" id="bench">
+                            <label for="bench">Bench</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="rack" id="rack">
+                            <label for="rack">Rack</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="pull-up bar" id="pullup">
+                            <label for="pullup">Pull-up Bar</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="cable machine" id="cable">
+                            <label for="cable">Cable Machine</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="treadmill" id="treadmill">
+                            <label for="treadmill">Treadmill</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="bike" id="bike">
+                            <label for="bike">Bike</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="equipment" value="jump rope" id="jump_rope">
+                            <label for="jump_rope">Jump Rope</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">📅 Generate Weekly Plan</button>
+            </form>
+            
+            <div class="nav-links">
+                <a href="/">🏠 Home</a>
+                <a href="/saved_workouts">💾 Saved Workouts</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Ensure at least one equipment is selected
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const equipment = document.querySelectorAll('input[name="equipment"]:checked');
+            if (equipment.length === 0) {
+                e.preventDefault();
+                alert('Please select at least one piece of equipment.');
+            }
+        });
+    </script>
+</body>
+</html> 

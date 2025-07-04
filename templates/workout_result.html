@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Workout Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .workout-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .info-item {
+            background: rgba(255,255,255,0.2);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .content {
+            padding: 30px 20px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            border: 2px solid #e1e5e9;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 2px solid #e1e5e9;
+        }
+        
+        .section-header h2 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .section-header p {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .workout-info {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        
+        .info-item {
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .exercise-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .exercise-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .exercise-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .exercise-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .detail-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .detail-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+        
+        .detail-value {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .exercise-notes {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #1976d2;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-success {
+            background: #28a745;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .nav-links a {
+            flex: 1;
+            padding: 12px;
+            background: #f8f9fa;
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background: #e9ecef;
+        }
+        
+        .timer {
+            background: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .timer h3 {
+            margin-bottom: 10px;
+        }
+        
+        .timer-display {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .timer-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .timer-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .timer-start {
+            background: #28a745;
+            color: white;
+        }
+        
+        .timer-pause {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .timer-reset {
+            background: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏋️ Your Workout Plan</h1>
+            <div class="workout-info">
+                <div class="info-item">
+                    <div class="info-label">Type</div>
+                    <div class="info-value">{{ workout.workout_type.replace('_', ' ').title() }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Goal</div>
+                    <div class="info-value">{{ workout.goal.replace('_', ' ').title() }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Duration</div>
+                    <div class="info-value">{{ workout.estimated_duration }} min</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Level</div>
+                    <div class="info-value">{{ workout.experience_level.title() }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="success-message">
+                ✅ Workout generated and saved as {{ filename }}
+            </div>
+            
+            <div class="workout-info">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Type</div>
+                        <div class="info-value">{{ workout.workout_type.replace('_', ' ').title() }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Goal</div>
+                        <div class="info-value">{{ workout.goal.replace('_', ' ').title() }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Duration</div>
+                        <div class="info-value">{{ workout.estimated_duration }} min</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Level</div>
+                        <div class="info-value">{{ workout.experience_level.title() }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Strength Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2>💪 {{ workout.strength.name }}</h2>
+                    <p>{{ workout.strength.description }}</p>
+                </div>
+                
+                {% for exercise in workout.strength.exercises %}
+                <div class="exercise-item">
+                    <div class="exercise-name">{{ exercise.name }}</div>
+                    <div class="exercise-details">
+                        {{ exercise.sets }} sets × {{ exercise.reps }} reps
+                        • Rest: {{ exercise.rest_time }}s
+                        • {{ exercise.muscle_group.title() }}
+                        {% if exercise.bjj_focus %}
+                        • {{ exercise.bjj_focus.replace('_', ' ').title() }}
+                        {% endif %}
+                    </div>
+                    {% if exercise.notes %}
+                    <div class="exercise-notes">{{ exercise.notes }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Metcon Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2>🔥 {{ workout.metcon.name }}</h2>
+                    <p>{{ workout.metcon.description }}</p>
+                </div>
+                
+                {% for exercise in workout.metcon.exercises %}
+                <div class="exercise-item">
+                    <div class="exercise-name">{{ exercise.name }}</div>
+                    <div class="exercise-details">
+                        {% if exercise.workout_format == 'AMRAP' %}
+                            {{ exercise.reps }} reps per round (AMRAP - 10-15 minutes)
+                        {% elif exercise.workout_format == 'EMOM' %}
+                            {{ exercise.reps }} reps every minute (EMOM - 10 minutes)
+                        {% else %}
+                            {{ exercise.reps * 3 }} total reps (For Time)
+                        {% endif %}
+                        • {{ exercise.muscle_group.title() }}
+                        {% if exercise.bjj_focus %}
+                        • {{ exercise.bjj_focus.replace('_', ' ').title() }}
+                        {% endif %}
+                    </div>
+                    {% if exercise.notes %}
+                    <div class="exercise-notes">{{ exercise.notes }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Accessory Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2>🥋 {{ workout.accessory.name }}</h2>
+                    <p>{{ workout.accessory.description }}</p>
+                </div>
+                
+                {% for exercise in workout.accessory.exercises %}
+                <div class="exercise-item">
+                    <div class="exercise-name">{{ exercise.name }}</div>
+                    <div class="exercise-details">
+                        {{ exercise.sets }} sets × {{ exercise.reps }} reps
+                        • Rest: 60s
+                        • {{ exercise.muscle_group.title() }}
+                        {% if exercise.bjj_focus %}
+                        • {{ exercise.bjj_focus.replace('_', ' ').title() }}
+                        {% endif %}
+                    </div>
+                    {% if exercise.notes %}
+                    <div class="exercise-notes">{{ exercise.notes }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <a href="/" class="btn">🔄 Generate New Workout</a>
+            <a href="/saved_workouts" class="btn btn-secondary">💾 View Saved Workouts</a>
+            
+            <div class="nav-links">
+                <a href="/weekly_plan">📅 Weekly Plan</a>
+                <a href="/">🏠 Home</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let timer;
+        let seconds = 0;
+        let isRunning = false;
+        
+        function updateTimer() {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+        
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                timer = setInterval(() => {
+                    seconds++;
+                    updateTimer();
+                }, 1000);
+            }
+        }
+        
+        function pauseTimer() {
+            isRunning = false;
+            clearInterval(timer);
+        }
+        
+        function resetTimer() {
+            isRunning = false;
+            clearInterval(timer);
+            seconds = 0;
+            updateTimer();
+        }
+        
+        // Auto-start timer when page loads
+        window.addEventListener('load', () => {
+            setTimeout(startTimer, 2000);
+        });
+    </script>
+</body>
+</html> 
